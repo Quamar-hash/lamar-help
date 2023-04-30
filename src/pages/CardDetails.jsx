@@ -13,6 +13,7 @@ import Breadscrum from "../components/Breadscrum";
 const CardDetails = () => {
   const location = useLocation();
   const { name, deckName } = location.state;
+  console.log(deckName)
   const navigate = useNavigate();
 
   const [individual, setIndividual] = useState({});
@@ -178,7 +179,7 @@ if (existingDeck) {
       {/* responsive changed width to 630 also fizinf fonts and tcolors where are the reusable components??? */}
       <section className="  px-6 my-4 max-w-[630px] lg:px-16">
         <div className="bg-gray-100 transition rounded-lg pb-4 duration-700 cursor-pointer active:scale-90">
-          <div className="flex-cols  w-full px-4 py-2  bg-gray-400 w-full">
+          <div className="flex-cols  w-full px-4 py-2  bg-gray-400 ">
             <div className="flex justify-between items-center py-2  ">
               <img src={card} />
               <div onClick={addCardToDeck} className="p-2 bg-white rounded-sm ">

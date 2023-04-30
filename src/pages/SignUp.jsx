@@ -2,19 +2,24 @@ import {useState} from "react"
 import { createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth"
 
 import {auth} from "../firebase"
+import { useNavigate } from "react-router-dom"
 
 
 export default function SignUp() {
 
+    const navigate = useNavigate("/")
+
     const [formData, setFormData] = useState({
         email: "",
         password: "",
+        firstName: "",
+        lastName:" ", 
         showPassword: false,
     })
 
     const signInUser = (event) => {
         event.preventDefault()
-        const {email, password} = formData
+        const {firstName, lastName, email, password} = formData
 
         createUserWithEmailAndPassword(auth, email, password )
          .then((userCredential) => {
@@ -23,8 +28,7 @@ export default function SignUp() {
          }).catch((err) => {
             console.error(err)
          }) 
-
-        // hello
+navigate("/")
     }
 
     const handleChange = (event) => {
@@ -42,11 +46,29 @@ export default function SignUp() {
 
 
     return(
-            <form className="mx-auto max-w-[500px] shadow rounded p-6 " onSubmit={signInUser}>
+            <form className="mx-auto mt-16 max-w-[500px] bg-white shadow-lg rounded p-6 " onSubmit={signInUser}>
 
-                <h1>Welcome back to Dexk builder. Please fill in the form to get started</h1>
+                <h1 className="text-center text-lg mb-2">Welcome to Swapi-Deck, Please Register</h1>
 
                 <div className="space-y-6">
+
+                <div className="relative z-0">
+                    <input type="text" id="first-name" name="firstName" className="floating-input peer" placeholder=" " onChange={handleChange}/>
+
+                    <label htmlFor="email"
+                        className="floating-label"
+                    >First Name</label>
+                </div>
+
+                <div className="relative z-0">
+                    <input type="text" id="text" name="lastName" className="floating-input peer" placeholder=" " onChange={handleChange}/>
+
+                    <label htmlFor="email"
+                        className="floating-label"
+                    >Last Name</label>
+                </div>
+
+
                 <div className="relative z-0">
                     <input type="email" id="email" name="email" className="floating-input peer" placeholder=" " onChange={handleChange}/>
 

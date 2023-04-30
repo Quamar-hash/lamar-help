@@ -43,9 +43,9 @@ export default function Login() {
     }
 
     return(
-            <form className="mx-auto max-w-[500px] shadow rounded p-6 " onSubmit={loginUser}>
+            <form className="mx-auto max-w-[500px] bg-white shadow-xl mt-16 rounded p-6 " onSubmit={loginUser}>
 
-                <h1>Welcome back to Dexk builder. Please Login to Continue</h1>
+                <h1 className="text-center text-lg mb-4">Welcome back to Swapi Deck</h1>
 
                 <div className="space-y-6">
                 <div className="relative z-0">
@@ -65,7 +65,7 @@ export default function Login() {
                 </div>
                 </div>
                 <input type="checkbox" name="showPassword" id="showPassword" onChange={handleChange}/>
-                <label htmlFor="showPassword">Show Password</label>
+                <label htmlFor="showPassword" className="ml-1">Show Password</label>
 
                 <button type="submit" className="py-2 font-semibold px-6 rounded bg-blue-500 text-white mx-auto block hover:bg-blue-800 transition">
                     Login
