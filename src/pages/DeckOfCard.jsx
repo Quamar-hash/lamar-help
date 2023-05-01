@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import Breadscrum from "../components/Breadscrum";
 import Controls from "../components/Controls";
 import add from "../assets/icons/add.svg";
@@ -19,23 +19,10 @@ import DeckSearch from "../components/DeckSearch";
 const DeckOfCard = () => {
   const location = useLocation();
 
+
   const [deckName, setDeckName] = useState(location.state.deckName);
+
   
-
- 
-  // useEffect(() => {
-  //   async function loadDeckName() {
-  //     const deckNameFromStorage =  localStorage.getItem("deckName");
-  //     if (deckNameFromStorage) {
-  //       setDeckName(deckNameFromStorage);
-  //     } else if (deckName) {
-  //       localStorage.setItem("deckName", deckName);
-  //     }
-  //   }
-  //   loadDeckName();
-  // }, [deckName]);
-
-  console.log("deck detail", deckName)
   
 
   const { filter, clicked } = useContext(FilterContext);
@@ -55,17 +42,17 @@ const DeckOfCard = () => {
 
   const navigate = useNavigate();
 
+  async function fetchData() {
+    const cards = await JSON.parse(localStorage.getItem(`deck-${deckName}`));
 
-  useEffect(() => {
-    async function fetchData() {
-      const cards = await JSON.parse(localStorage.getItem(`deck-${deckName}`));
-      if (cards) {
-        const result = sortObjectsByName(cards.newCards, filter);
-        setMyCards(result);
-      }
+    if (cards) {
+      const result = sortObjectsByName(cards.newCards, filter);
+      
+      setMyCards(result);
     }
-    fetchData();
-  }, [deckName, filter]);
+  }
+
+
   
   
 
@@ -73,7 +60,7 @@ const DeckOfCard = () => {
 
   const [currentPage, setCurrentPage] = useState(1);
   const [displayedItems, setDisplayedItems] = useState([]);
-  const [itemsPerPage, setItemPerPage] = useState(2);
+  const [itemsPerPage, setItemPerPage] = useState(5);
 
   const totalPages = Math.ceil(myCards?.length / itemsPerPage);
 
@@ -99,43 +86,23 @@ const DeckOfCard = () => {
   }, [currentPage, myCards, itemsPerPage, deckName]);
 
 
-
-
-
-
-
-
-
-  const handleFocus = () => {
-    updateClicked(true);
-  };
-
-  const handleBlur = () => {
-    timerRef.current = setTimeout(() => {
-      updateClicked(false);
-    }, 500); // wait for half a second before setting focus to false
-  };
-
-  const handleChange = (e) => {
-    setSearchTerm(e.target.value);
-    console.log(e.target.value);
-    getSearchTerm(searchTerm);
-    clearTimeout(timerRef.current); // clear the timeout on every change
-  };
-
   const deleteCard = (id) => {
+
     const updatedCards = [...myCards];
     updatedCards.splice(id, 1);
     setMyCards(updatedCards);
-    localStorage.setItem(deckName, JSON.stringify(updatedCards));
+    localStorage.setItem(`deck-${deckName}`, JSON.stringify({
+      deckName: deckName, 
+      newCards: updatedCards
+    }));
     alert("card succesfully deleted");
   };
 
   function sortObjectsByName(objects) {
     if (filter === "alphabet") {
       return objects.sort((a, b) => {
-        const nameA = a.name.toUpperCase(); // ignore upper and lowercase
-        const nameB = b.name.toUpperCase(); // ignore upper and lowercase
+        const nameA = a?.name?.toUpperCase(); // ignore upper and lowercase
+        const nameB = b?.name?.toUpperCase(); // ignore upper and lowercase
         if (nameA < nameB) {
           return 1;
         }
@@ -166,6 +133,7 @@ const DeckOfCard = () => {
       const key = localStorage.key(i);
       if (key.startsWith("deck-")) {
         const deck = await JSON.parse(localStorage.getItem(key));
+        console.log(deck)
         allDeck.push(deck);
         decks.push(deck.deckName);
       }
@@ -207,8 +175,36 @@ const DeckOfCard = () => {
     }
 
     deleteCard(id);
+    setActive(false)
   };
-  console.log('hei')
+
+
+  
+
+
+  const handleFocus = () => {
+    updateClicked(true);
+  };
+
+  const handleBlur = () => {
+    timerRef.current = setTimeout(() => {
+      updateClicked(false);
+    }, 500); 
+  };
+
+  const handleChange = (e) => {
+    setSearchTerm(e.target.value);
+    console.log(e.target.value);
+    getSearchTerm(searchTerm);
+    clearTimeout(timerRef.current); 
+  };
+
+  useEffect(() => {
+ 
+    fetchData();
+  }, [deckName, filter,]);
+
+  console.log(myCards)
 
   return (
     <section className="h-full">
@@ -235,6 +231,7 @@ const DeckOfCard = () => {
         ) : (
           <div className=" grid  md:grid-cols-2 lg:grid-cols-5 grid-cols-1 gap-4  mt-4 mb-8 ">
             {displayedItems.map((info, id) => {
+              console.log(info)
               return (
                 <section
                   key={id}
@@ -252,7 +249,7 @@ const DeckOfCard = () => {
                         </div>
                         <div
                           onClick={() => deleteCard(id)}
-                          className="p-2 bg-white   rounded-sm "
+                          className="p-2   rounded-sm "
                         >
                           <img src={remove} className="w-5 text-black" />
                         </div>
@@ -260,11 +257,11 @@ const DeckOfCard = () => {
                     </div>
                     <h2 className="text-2xl font-semibold">{info.name}</h2>
                   </div>
-                  <div className="mt-4 md:px-8 px-4">
+                  <div className="mt-4 px-4">
                     <div className="w-full     flex items-center justify-between ">
                       <div className="flex items-center">
                         <img src={info.gender === "male" ? male : female} />
-                        <p>{info.birth_year || "unknown"}</p>
+                        <p className="pl-1">{info.birth_year || "unknown"}</p>
                       </div>
 
                       <p>Species</p>

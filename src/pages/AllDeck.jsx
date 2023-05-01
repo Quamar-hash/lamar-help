@@ -82,17 +82,6 @@ const AllDeck = () => {
   };
   
 
-  const updateCardName = (index, newName) => {
-    const updatedCards = [...cards];
-    updatedCards[index].cardName = newName;
-    setCards(updatedCards);
-  };
-
- 
-
- 
-
-
   const handleFocus = () => {
     updateClicked(true);
   };

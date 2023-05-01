@@ -17,7 +17,7 @@ const MenuItems = () => {
     // event that monitors the auth state with firebase
     const listen = onAuthStateChanged(auth, (user) => {
       if(user) {
-        console.log(user)
+       
         setAuthUser(user)
       }else {
         setAuthUser(null)

@@ -92,7 +92,7 @@ const Decks = ({ card, cardName,  deleteCard, index, imageClassName }) => {
   return (
     <div
       key={index}
-      //  h-28 is acting weird something sus inspect and see
+      
       className="h-28 cursor-pointer active:scale-95 transition duration-500"
     >
       <div
@@ -105,7 +105,7 @@ const Decks = ({ card, cardName,  deleteCard, index, imageClassName }) => {
           <DeckIcon strokeColor="white" />
         </div>
 
-        <div className="flex  bg-green-400 ">
+        <div className="flex  ">
           <div
             onClick={(event) => updateDeck(event)}
             className="absolute top-6 right-16 bg-white p-2"
