@@ -62,24 +62,31 @@ const Decks = ({ card, cardName,  deleteCard, index, imageClassName }) => {
   const handleName = (event) => {
     event.preventDefault();
     console.log("hey");
-  
+    console.log(allDeck)
+  console.log(card)
     console.log(newName);
-    const existingName = JSON.parse(localStorage.getItem(`deck-${card.cardName}`)) || [];
+    const existingName = JSON.parse(localStorage.getItem('cards')) || [];
     console.log(existingName);
-    if (existingName && newName) {
-      localStorage.removeItem(`deck-${card.cardName}`);
-      existingName.deckName = newName;
-      localStorage.setItem(`deck-${newName}`, JSON.stringify(existingName));
-      
-      // Add updated deck to allDeck array
-      const updatedDecks = allDeck.map((deck) => {
-        if (deck.deckName === card.cardName) {
-          return { ...deck, deckName: newName };
-        }
-        return deck;
-      });
-      setAllDecks(updatedDecks);
-    }
+    const existingData = allDeck.filter(item => item.deckName == card.cardName)
+    const toBePassed = existingData[0].newCards
+    const itemToBeUpdated = existingName.filter(item => item.cardName == card.cardName)
+    const updatedItem = { ...itemToBeUpdated[0], cardName: newName };
+    const updatedCards = existingName.map(item => {
+      if (item.cardName === card.cardName) {
+        return updatedItem;
+      }
+      return item;
+    });
+
+    console.log(toBePassed)
+    console.log(updatedCards)
+    console.log(card.cardName)
+    localStorage.removeItem(`deck-${card.cardName}`);
+    localStorage.setItem(`deck-${newName}`,  JSON.stringify({
+      deckName: newName,
+      newCards: toBePassed
+    }))
+    localStorage.setItem('cards', JSON.stringify(updatedCards));
    
   };
   
