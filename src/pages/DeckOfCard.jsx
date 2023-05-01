@@ -20,10 +20,22 @@ const DeckOfCard = () => {
   const location = useLocation();
 
 
-  const [deckName, setDeckName] = useState(location.state.deckName);
+  const [deckName, setDeckName] = useState(" ");
 
+  console.log(deckName)
+
+  useEffect(() => {
+    localStorage.setItem('current-deck-name', location.state.deckName);
+  }, []);
   
   
+  useEffect(() => {
+    const storedDeckName = localStorage.getItem('current-deck-name');
+    if (storedDeckName) {
+      setDeckName(storedDeckName);
+    }
+  }, []);
+
 
   const { filter, clicked } = useContext(FilterContext);
 
